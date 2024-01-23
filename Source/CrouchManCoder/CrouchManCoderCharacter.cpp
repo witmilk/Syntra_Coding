@@ -94,17 +94,14 @@ void ACrouchManCoderCharacter::SetupPlayerInputComponent(UInputComponent* Player
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACrouchManCoderCharacter::Look);
 
-		// Looking
+		// Crouching
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &ACrouchManCoderCharacter::DoCrouch);
-
-		// Looking
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &ACrouchManCoderCharacter::DoUnCrouch);
 
 		//Clicking
+		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &ACrouchManCoderCharacter::Clicked);
 		EnhancedInputComponent->BindAction(SaveAction, ETriggerEvent::Started, this, &ACrouchManCoderCharacter::Save);
-
 		EnhancedInputComponent->BindAction(LoadAction, ETriggerEvent::Started, this, &ACrouchManCoderCharacter::Load);
-		
 	}
 	else
 	{
@@ -192,19 +189,23 @@ void ACrouchManCoderCharacter::Clicked(const FInputActionValue&)
 		);
 
 	//Finally iterate over the outActor array
-	// for (AActor* overlappedActor : hitActors)
-	// {
-	// 	UE_LOG(LogTemp, Log, TEXT("OverlappedActor: %s"), *overlappedActor->GetName());
-	//
-	// 	auto* mesh = overlappedActor->GetComponentByClass<UStaticMeshComponent>();
-	// 	if (mesh != nullptr)
-	// 	{
-	// 		for(int i = 0; i <mesh->GetNumMaterials(); i++)
-	// 		{
-	// 			mesh->SetMaterial(i, NewMaterial[i]);
-	// 		}
-	// 	}
-	// }
+      	 for (AActor* overlappedActor : hitActors)
+      	 {
+      	 	UE_LOG(LogTemp, Log, TEXT("OverlappedActor: %s"), *overlappedActor->GetName());
+      	
+		 	auto* mesh = overlappedActor->GetComponentByClass<UStaticMeshComponent>();
+      	 	if (mesh != nullptr)
+      	 	{
+      	 		for(int i = 0; i <mesh->GetNumMaterials(); i++)
+      			{
+      	 			mesh->SetMaterial(i, NewMaterial[i]);
+      			}
+      	
+      		}
+      	
+      	}
+
+	
 }
 
 void ACrouchManCoderCharacter::Save(const FInputActionValue& Value)
@@ -246,7 +247,7 @@ void ACrouchManCoderCharacter::Load(const FInputActionValue & Value)
 		UE_LOG(LogTemp, Log, TEXT("Save Game does not exist, cancelling"));
 		return;
 	}
-
+	
 	auto* loadedSaveGame = UGameplayStatics::LoadGameFromSlot(SaveSlot, 0);
 	auto* convertedLoadedSaveGame = Cast<UCrouchManCoderMySaveGame>(loadedSaveGame);
 
